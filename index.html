@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Round Recap</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="screen" id="storyScreen">
+    <div class="screen__content">
+      <div class="story-progress" id="storyProgress"></div>
+
+      <header class="top-card">
+        <div class="top-card__left">
+          <div class="avatar">
+            <img id="pageIcon" src="imgs/1F_icon.png" alt="icon" />
+          </div>
+
+          <div class="top-card__text">
+            <h2>Round Recap</h2>
+            <p>See your results</p>
+          </div>
+        </div>
+
+        <button class="close-btn" aria-label="Close">×</button>
+      </header>
+
+      <section id="pageBody" class="page-body"></section>
+    </div>
+
+    <button class="tap-zone tap-zone--left" id="tapLeft" aria-label="Previous page"></button>
+    <button class="tap-zone tap-zone--right" id="tapRight" aria-label="Next page"></button>
+  </main>
+
+  <script src="js/pages.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
