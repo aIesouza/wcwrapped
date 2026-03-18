@@ -74,7 +74,7 @@ body {
   color: var(--color-text);
 }
 
-.screen {
+.app-shell {
   position: relative;
   width: var(--screen-width);
   min-height: 100vh;
@@ -83,20 +83,95 @@ body {
   background: #cccccc;
 }
 
+.screen,
+.entry-screen {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.screen {
+  overflow: hidden;
+  background: #cccccc;
+}
+
 .screen__content {
   position: relative;
   min-height: 100vh;
-  z-index: 2;
+  z-index: 50;
+  pointer-events: none;
 }
 
 .page-body {
   position: relative;
   min-height: 100vh;
   z-index: 1;
+  pointer-events: none;
+}
+
+.is-hidden {
+  display: none;
 }
 
 /* =========================
-   5. PROGRESS BAR
+   5. ENTRY SCREEN
+========================= */
+
+.entry-screen {
+  background: #111111;
+}
+
+.entry-screen__tap {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  padding: 0;
+  border: none;
+  background: #111111;
+  cursor: pointer;
+  overflow: hidden;
+  user-select: none;
+}
+
+.entry-screen__scroll {
+  position: absolute;
+  inset: 0 0 78px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.entry-screen__scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.entry-screen__image {
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.entry-screen__bottom-nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 78px;
+  z-index: 2;
+  background: #111111;
+}
+
+.entry-screen__bottom-nav-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================
+   6. PROGRESS BAR
 ========================= */
 
 .story-progress {
@@ -110,6 +185,8 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   gap: 6px;
   padding: 0 18px;
+
+  pointer-events: auto;
 }
 
 .story-progress__item {
@@ -131,7 +208,7 @@ body {
 }
 
 /* =========================
-   6. SHARED HEADER
+   7. SHARED HEADER
 ========================= */
 
 .top-card {
@@ -139,12 +216,14 @@ body {
   top: var(--header-top-space);
   left: 0;
   right: 0;
-  z-index: 25;
+  z-index: 60;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 18px;
+
+  pointer-events: auto;
 }
 
 .top-card__left {
@@ -198,11 +277,12 @@ body {
   line-height: 1;
   cursor: pointer;
   position: relative;
-  z-index: 30;
+  z-index: 70;
+  pointer-events: auto;
 }
 
 /* =========================
-   7. DEFAULT PAGE SYSTEM
+   8. DEFAULT PAGE SYSTEM
 ========================= */
 
 .screen.page-theme--default {
@@ -360,7 +440,7 @@ body {
 }
 
 /* =========================
-   8. PAGE 1 - ROUND RECAP
+   9. PAGE 1 - ROUND RECAP
 ========================= */
 
 .screen.page-theme--round-recap {
@@ -496,7 +576,7 @@ body {
 }
 
 /* =========================
-   9. PAGE 4 - ROUND MVP
+   10. PAGE 4 - ROUND MVP
 ========================= */
 
 .screen.page-theme--round-mvp {
@@ -577,7 +657,7 @@ body {
 }
 
 /* =========================
-   10. PAGE 5 - XP ROUND
+   11. PAGE 5 - XP ROUND
 ========================= */
 
 .screen.page-theme--xp-round {
@@ -659,26 +739,13 @@ body {
 
 .page-xp-round__badge {
   position: absolute;
-  left: 50%;
-  top: 62%;
-  width: 26%;
-  max-width: none;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  animation: intro-content-fade 0.8s ease-out 0.3s forwards;
-}
-
-.page-xp-round__badge {
-  position: absolute;
   left: 37%;
   top: 68%;
   width: 26%;
   max-width: none;
   transform: translate(-50%, -50%);
   z-index: 3;
-  animation:
-    intro-content-fade 0.8s ease-out 0.3s forwards,
-    star-float var(--motion-bg-duration) var(--motion-bg-easing) 1.1s infinite;
+  animation: intro-content-fade 0.8s ease-out 0.3s forwards;
 }
 
 .page-xp-round__bottom-text {
@@ -699,7 +766,7 @@ body {
 }
 
 /* =========================
-   11. PAGE 6 - BADGES EARNED
+   12. PAGE 6 - BADGES EARNED
 ========================= */
 
 .screen.page-theme--badges-earned {
@@ -833,7 +900,7 @@ body {
 }
 
 /* =========================
-   12. PAGE 7 - PREDICTION STATUS
+   13. PAGE 7 - PREDICTION STATUS
 ========================= */
 
 .screen.page-theme--prediction-status {
@@ -940,9 +1007,9 @@ body {
 
 .page-prediction-status__stats {
   display: grid;
-  grid-template-columns: repeat(3, auto);  /* 🔥 key change */
-  justify-content: center;                 /* centers the group */
-  gap: 42px;                               /* controls spacing */
+  grid-template-columns: repeat(3, auto);
+  justify-content: center;
+  gap: 42px;
   margin-top: 34px;
 }
 
@@ -963,7 +1030,6 @@ body {
   font-weight: 900;
 }
 
-/* Page 7 numbers → Druk only */
 .page-prediction-status__main-value,
 .page-prediction-status__main-suffix,
 .page-prediction-status__stat-value {
@@ -971,7 +1037,7 @@ body {
 }
 
 /* =========================
-   13. PAGE 8 - SHARE RECAP
+   14. PAGE 8 - SHARE RECAP
 ========================= */
 
 .screen.page-theme--share-recap {
@@ -1040,15 +1106,16 @@ body {
   text-transform: uppercase;
   cursor: pointer;
   animation: intro-content-fade 0.8s ease-out 0.35s forwards;
+  pointer-events: auto;
 }
 
 /* =========================
-   10. TAP ZONES
+   15. TAP ZONES
 ========================= */
 
 .tap-zone {
   position: absolute;
-  top: 0;
+  top: 90px;
   bottom: 0;
   width: 50%;
   border: none;
@@ -1065,7 +1132,7 @@ body {
 }
 
 /* =========================
-   11. ANIMATIONS
+   16. ANIMATIONS
 ========================= */
 
 @keyframes star-float {
@@ -1105,7 +1172,7 @@ body {
 }
 
 /* =========================
-   12. ACCESSIBILITY
+   17. ACCESSIBILITY
 ========================= */
 
 @media (prefers-reduced-motion: reduce) {

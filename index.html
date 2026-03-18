@@ -7,31 +7,57 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <main class="screen" id="storyScreen">
-    <div class="screen__content">
-      <div class="story-progress" id="storyProgress"></div>
+  <div class="app-shell">
 
-      <header class="top-card">
-        <div class="top-card__left">
-          <div class="avatar">
-            <img id="pageIcon" src="imgs/1F_icon.png" alt="icon" />
-          </div>
-
-          <div class="top-card__text">
-            <h2>Round Recap</h2>
-            <p>See your results</p>
-          </div>
+    <!-- ENTRY SCREEN -->
+    <section class="entry-screen" id="entryScreen" aria-label="App home mockup">
+      <button class="entry-screen__tap" id="entryTap" aria-label="Open wrapped">
+        <div class="entry-screen__scroll">
+          <img
+            src="imgs/entry-screen/apphome-mockup.png"
+            alt="App home screen"
+            class="entry-screen__image"
+          >
         </div>
 
-        <button class="close-btn" aria-label="Close">×</button>
-      </header>
+        <div class="entry-screen__bottom-nav">
+          <img
+            src="imgs/entry-screen/navi-bar.png"
+            alt=""
+            class="entry-screen__bottom-nav-image"
+          >
+        </div>
+      </button>
+    </section>
 
-      <section id="pageBody" class="page-body"></section>
-    </div>
+    <!-- WRAPPED / STORY -->
+    <main class="screen is-hidden" id="storyScreen">
+      <div class="screen__content">
+        <div class="story-progress" id="storyProgress"></div>
 
-    <button class="tap-zone tap-zone--left" id="tapLeft" aria-label="Previous page"></button>
-    <button class="tap-zone tap-zone--right" id="tapRight" aria-label="Next page"></button>
-  </main>
+        <header class="top-card">
+          <div class="top-card__left">
+            <div class="avatar">
+              <img id="pageIcon" src="imgs/1F_icon.png" alt="icon" />
+            </div>
+
+            <div class="top-card__text">
+              <h2>Round Recap</h2>
+              <p>See your results</p>
+            </div>
+          </div>
+
+          <button class="close-btn" aria-label="Close">×</button>
+        </header>
+
+        <section id="pageBody" class="page-body"></section>
+      </div>
+
+      <button class="tap-zone tap-zone--left" id="tapLeft" aria-label="Previous page"></button>
+      <button class="tap-zone tap-zone--right" id="tapRight" aria-label="Next page"></button>
+    </main>
+
+  </div>
 
   <script src="js/pages.js"></script>
   <script src="js/app.js"></script>

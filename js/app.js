@@ -1,11 +1,22 @@
+const ENABLE_APP_ENTRY = true;
+
 let currentPage = 0;
 
+const entryScreen = document.getElementById("entryScreen");
+const entryTap = document.getElementById("entryTap");
 const storyScreen = document.getElementById("storyScreen");
 const pageIcon = document.getElementById("pageIcon");
 const pageBody = document.getElementById("pageBody");
 const storyProgress = document.getElementById("storyProgress");
 const tapLeft = document.getElementById("tapLeft");
 const tapRight = document.getElementById("tapRight");
+const closeBtn = document.querySelector(".close-btn");
+
+function restartScreenAnimation() {
+  storyScreen.classList.remove("screen--animated");
+  void storyScreen.offsetWidth;
+  storyScreen.classList.add("screen--animated");
+}
 
 function renderPage(index) {
   const page = pages[index];
@@ -38,10 +49,7 @@ function renderTheme(page) {
       "--page-bg-color",
       page.bgColor || "#3385e3"
     );
-
-    storyScreen.classList.remove("screen--animated");
-    void storyScreen.offsetWidth;
-    storyScreen.classList.add("screen--animated");
+    restartScreenAnimation();
     return;
   }
 
@@ -57,10 +65,7 @@ function renderTheme(page) {
       "--page-bg-color",
       page.bgColor || "#d4d4d4"
     );
-
-    storyScreen.classList.remove("screen--animated");
-    void storyScreen.offsetWidth;
-    storyScreen.classList.add("screen--animated");
+    restartScreenAnimation();
     return;
   }
 
@@ -143,6 +148,65 @@ function getRoundRecapMarkup(page) {
   `;
 }
 
+function getDefaultPageMarkup(page) {
+  const topBlock = page.user
+    ? `
+      <div class="page-default__user">
+        <div class="page-default__avatar">
+          <img src="${page.user.avatar}" alt="${page.user.name}">
+        </div>
+        <div class="page-default__username">${page.user.name}</div>
+      </div>
+    `
+    : `
+      <div class="page-default__country">
+        <img class="page-default__flag" src="${page.flag}" alt="${page.country} flag">
+        <span>${page.country}</span>
+      </div>
+    `;
+
+  const scoreGroupClass =
+    page.showBadges === false
+      ? "page-default__score-group page-default__score-group--solo"
+      : "page-default__score-group";
+
+  const badgesMarkup =
+    page.showBadges === false
+      ? ""
+      : `
+        <div class="page-default__badges">
+          <div class="page-default__badge page-default__badge--yellow">${page.yellow}</div>
+          <div class="page-default__badge page-default__badge--red">${page.red}</div>
+        </div>
+      `;
+
+  const decorMarkup = page.decorImage
+    ? `
+      <img
+        src="${page.decorImage}"
+        class="page-default__decor page-default__decor--left-spikes"
+        alt=""
+      >
+    `
+    : "";
+
+  return `
+    <div class="page-default">
+      ${decorMarkup}
+      ${topBlock}
+
+      <h1 class="page-default__title">${page.title}</h1>
+
+      <div class="${scoreGroupClass}">
+        <div class="page-default__score">${page.score}</div>
+        ${badgesMarkup}
+      </div>
+
+      <p class="page-default__players">${page.players}</p>
+    </div>
+  `;
+}
+
 function getRoundMvpMarkup(page) {
   return `
     <div class="page-round-mvp">
@@ -163,7 +227,6 @@ function getRoundMvpMarkup(page) {
 function getXpRoundMarkup(page) {
   return `
     <div class="page-xp-round">
-
       <div class="page-xp-round__user">
         <div class="page-xp-round__avatar">
           <img src="${page.user.avatar}" alt="${page.user.name}">
@@ -173,23 +236,9 @@ function getXpRoundMarkup(page) {
 
       <h1 class="page-xp-round__title">${page.title}</h1>
 
-      <img
-        src="${page.spikesImage}"
-        class="page-xp-round__spikes"
-        alt=""
-      >
-
-      <img
-        src="${page.characterImage}"
-        class="page-xp-round__character"
-        alt="${page.user.name}"
-      >
-
-      <img
-        src="${page.badgeImage}"
-        class="page-xp-round__badge"
-        alt=""
-      >
+      <img src="${page.spikesImage}" class="page-xp-round__spikes" alt="">
+      <img src="${page.characterImage}" class="page-xp-round__character" alt="${page.user.name}">
+      <img src="${page.badgeImage}" class="page-xp-round__badge" alt="">
 
       <p class="page-xp-round__bottom-text">${page.bottomText}</p>
     </div>
@@ -199,7 +248,6 @@ function getXpRoundMarkup(page) {
 function getBadgesEarnedMarkup(page) {
   return `
     <div class="page-badges-earned">
-
       <div class="page-badges-earned__user">
         <div class="page-badges-earned__avatar">
           <img src="${page.user.avatar}" alt="${page.user.name}">
@@ -209,11 +257,7 @@ function getBadgesEarnedMarkup(page) {
 
       <h1 class="page-badges-earned__title">${page.title}</h1>
 
-      <img
-        src="${page.spikesImage}"
-        class="page-badges-earned__spikes"
-        alt=""
-      >
+      <img src="${page.spikesImage}" class="page-badges-earned__spikes" alt="">
 
       <div class="page-badges-earned__grid">
         <div class="page-badges-earned__item page-badges-earned__item--left">
@@ -252,64 +296,62 @@ function getBadgesEarnedMarkup(page) {
           </div>
         </div>
       </div>
-
     </div>
   `;
 }
 
-function getDefaultPageMarkup(page) {
-  const topBlock = page.user
-    ? `
-      <div class="page-default__user">
-        <div class="page-default__avatar">
+function getPredictionStatusMarkup(page) {
+  return `
+    <div class="page-prediction-status">
+      <img src="${page.decorImage}" class="page-prediction-status__decor" alt="">
+
+      <div class="page-prediction-status__user">
+        <div class="page-prediction-status__avatar">
           <img src="${page.user.avatar}" alt="${page.user.name}">
         </div>
-        <div class="page-default__username">${page.user.name}</div>
+        <div class="page-prediction-status__username">${page.user.name}</div>
       </div>
-    `
-    : `
-      <div class="page-default__country">
-        <img class="page-default__flag" src="${page.flag}" alt="${page.country} flag">
-        <span>${page.country}</span>
+
+      <h1 class="page-prediction-status__title">${page.title}</h1>
+
+      <p class="page-prediction-status__metric-label">${page.metricLabel}</p>
+
+      <div class="page-prediction-status__main-metric">
+        <span class="page-prediction-status__main-value">${page.mainValue}</span>
+        <span class="page-prediction-status__main-suffix">${page.mainSuffix}</span>
       </div>
-    `;
 
-  const scoreGroupClass = page.showBadges === false
-    ? "page-default__score-group page-default__score-group--solo"
-    : "page-default__score-group";
+      <div class="page-prediction-status__stats">
+        <div class="page-prediction-status__stat">
+          <div class="page-prediction-status__stat-label">${page.stat1Label}</div>
+          <div class="page-prediction-status__stat-value">${page.stat1Value}</div>
+        </div>
 
-  const badgesMarkup = page.showBadges === false
-    ? ""
-    : `
-      <div class="page-default__badges">
-        <div class="page-default__badge page-default__badge--yellow">${page.yellow}</div>
-        <div class="page-default__badge page-default__badge--red">${page.red}</div>
+        <div class="page-prediction-status__stat">
+          <div class="page-prediction-status__stat-label">${page.stat2Label}</div>
+          <div class="page-prediction-status__stat-value">${page.stat2Value}</div>
+        </div>
+
+        <div class="page-prediction-status__stat">
+          <div class="page-prediction-status__stat-label">${page.stat3Label}</div>
+          <div class="page-prediction-status__stat-value">${page.stat3Value}</div>
+        </div>
       </div>
-    `;
+    </div>
+  `;
+}
 
-  const decorMarkup = page.decorImage
-    ? `
-      <img
-        src="${page.decorImage}"
-        class="page-default__decor page-default__decor--left-spikes"
-        alt=""
-      >
-    `
-    : "";
-
+function getShareRecapMarkup(page) {
   return `
-    <div class="page-default">
-      ${decorMarkup}
-      ${topBlock}
+    <div class="page-share-recap">
+      <p class="page-share-recap__intro">${page.intro}</p>
 
-      <h1 class="page-default__title">${page.title}</h1>
+      <img src="${page.backgroundDecor}" class="page-share-recap__decor" alt="">
+      <img src="${page.cardImage}" class="page-share-recap__card" alt="Week recap card">
 
-      <div class="${scoreGroupClass}">
-        <div class="page-default__score">${page.score}</div>
-        ${badgesMarkup}
-      </div>
-
-      <p class="page-default__players">${page.players}</p>
+      <button class="page-share-recap__button" type="button">
+        ${page.buttonLabel}
+      </button>
     </div>
   `;
 }
@@ -355,80 +397,47 @@ function goPrevious() {
   }
 }
 
-function getPredictionStatusMarkup(page) {
-  return `
-    <div class="page-prediction-status">
+function showEntryScreen() {
+  if (!entryScreen) {
+    showStoryScreen();
+    return;
+  }
 
-      <img
-        src="${page.decorImage}"
-        class="page-prediction-status__decor"
-        alt=""
-      >
-
-      <div class="page-prediction-status__user">
-        <div class="page-prediction-status__avatar">
-          <img src="${page.user.avatar}" alt="${page.user.name}">
-        </div>
-        <div class="page-prediction-status__username">${page.user.name}</div>
-      </div>
-
-      <h1 class="page-prediction-status__title">${page.title}</h1>
-
-      <p class="page-prediction-status__metric-label">${page.metricLabel}</p>
-
-      <div class="page-prediction-status__main-metric">
-        <span class="page-prediction-status__main-value">${page.mainValue}</span>
-        <span class="page-prediction-status__main-suffix">${page.mainSuffix}</span>
-      </div>
-
-      <div class="page-prediction-status__stats">
-        <div class="page-prediction-status__stat">
-          <div class="page-prediction-status__stat-label">${page.stat1Label}</div>
-          <div class="page-prediction-status__stat-value">${page.stat1Value}</div>
-        </div>
-
-        <div class="page-prediction-status__stat">
-          <div class="page-prediction-status__stat-label">${page.stat2Label}</div>
-          <div class="page-prediction-status__stat-value">${page.stat2Value}</div>
-        </div>
-
-        <div class="page-prediction-status__stat">
-          <div class="page-prediction-status__stat-label">${page.stat3Label}</div>
-          <div class="page-prediction-status__stat-value">${page.stat3Value}</div>
-        </div>
-      </div>
-
-    </div>
-  `;
+  entryScreen.classList.remove("is-hidden");
+  storyScreen.classList.add("is-hidden");
 }
 
-function getShareRecapMarkup(page) {
-  return `
-    <div class="page-share-recap">
+function showStoryScreen() {
+  if (entryScreen) {
+    entryScreen.classList.add("is-hidden");
+  }
 
-      <p class="page-share-recap__intro">${page.intro}</p>
+  storyScreen.classList.remove("is-hidden");
+  renderPage(currentPage);
+}
 
-      <img
-        src="${page.backgroundDecor}"
-        class="page-share-recap__decor"
-        alt=""
-      >
+function handleClose() {
+  if (ENABLE_APP_ENTRY && entryScreen) {
+    showEntryScreen();
+    return;
+  }
 
-      <img
-        src="${page.cardImage}"
-        class="page-share-recap__card"
-        alt="Week recap card"
-      >
-
-      <button class="page-share-recap__button" type="button">
-        ${page.buttonLabel}
-      </button>
-
-    </div>
-  `;
+  storyScreen.classList.add("is-hidden");
 }
 
 tapRight.addEventListener("click", goNext);
 tapLeft.addEventListener("click", goPrevious);
 
-renderPage(currentPage);
+if (entryTap) {
+  entryTap.addEventListener("click", showStoryScreen);
+}
+
+if (closeBtn) {
+  closeBtn.addEventListener("click", handleClose);
+}
+
+if (ENABLE_APP_ENTRY && entryScreen) {
+  showEntryScreen();
+} else {
+  showStoryScreen();
+}
